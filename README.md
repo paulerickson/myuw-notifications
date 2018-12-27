@@ -22,6 +22,22 @@ Use the component's HTML tag wherever you want:
 </myuw-notifications>
 ```
 
+### Display notifications
+
+The component listens for a custom event to tell it when there are notifications ready to display. Dispatch a custom event named `myuw-has-notifications` that includes JSON data, like so:
+
+```js
+var event = new CustomEvent('myuw-has-notifications', {
+  detail: {
+    detail: {
+      notifications: yourNotificationsJson
+    }
+  });
+document.dispatchEvent(event);
+```
+
+*Note: The component expects a data model similar to the one currently used in MyUW. Efforts to make this more generic or to allow adopters to establish their own data models are in progress.*
+
 ### Configurable attributes
 
 - **see-all-url**: If this optional attribute is provided, the component will display a "See all" link in the title row of the notifications list.
