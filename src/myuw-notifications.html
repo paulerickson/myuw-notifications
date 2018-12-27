@@ -1,0 +1,329 @@
+<style>
+
+:host([hidden]) {
+  display: none;
+}
+
+#wrapper {
+  position: var( --myuw-menu-wrapper-position, relative );
+  display: var( --myuw-menu-wrapper-display, inline-block );
+  margin: var( --myuw-menu-wrapper-margin, 0 6px );
+}
+
+#wrapper.hidden {
+  display: none;
+}
+
+#bell-button {
+  display: flex;
+  justify-content: var( --myuw-icon-button-justify, center );
+  align-content: var( --myuw-icon-button-align-content, center );
+  align-items: var( --myuw-icon-button-align-items, center );
+  position: relative;
+  cursor: pointer;
+  min-height: var( --myuw-icon-button-height, 42px );
+  min-width: var( --myuw-icon-button-width, 42px );
+  height: var( --myuw-icon-button-height, 42px );
+  width: var( --myuw-icon-button-width, 42px );
+  user-select: none;
+  outline: none;
+  padding: var( --myuw-icon-button-padding, 0 );
+  margin: var( --myuw-icon-button-padding, 0 6px );
+  border: var( --myuw-icon-button-border, 0 );
+  border-radius: var( --myuw-icon-border-radius, 50% );
+  background-color: var( --myuw-icon-button-bg, transparent );
+  -webkit-transition: var( --myuw-icon-button-transition, background-color .3s cubic-bezier(.35,0,.25,1) );
+  transition: var( --myuw-icon-button-transition, background-color .3s cubic-bezier(.35,0,.25,1) );
+}
+
+#bell-button:hover {
+  background-color: var( --myuw-icon-button-hover-bg, rgba(0,0,0,0.2) );
+}
+
+#bell-icon {
+  color: var(--myuw-primary-color, #fff);
+  fill: var(--myuw-primary-color, #fff);
+  height: var( --myuw-icon-button-icon-height, 30px );
+  width: var( --myuw-icon-button-icon-width, 30px );
+}
+
+#count {
+
+}
+
+#count.hidden {
+  display: none;
+}
+
+#list {
+  position: var( --myuw-menu-position, absolute );
+  top: var( --myuw-menu-position-top, 45px );
+  right: var( --myuw-menu-position-right, 0 );
+  min-width: var( --myuw-menu-width, 320px );
+  list-style: var( --myuw-menu-list-style, none );
+  margin: var( --myuw-menu-margin, 0 );
+  padding: var( --myuw-menu-padding, 0 );
+  font-size: var( --myuw-font-size, 14px );
+  z-index: var( --myuw-menu-depth, 101 );
+
+  transform-origin: var( --myuw-transform-origin, top right );
+  transform: var( --myuw-menu-transform, scale(0) );
+  opacity: var( --myuw-menu-opacity, 0 );
+  visibility: var( --myuw-menu-visibility, hidden );
+  transition: var( --myuw-menu-transition, visibility 0s, opacity .25s cubic-bezier(0.0, 0.0, 0.2, 1), transform .25s cubic-bezier(0.0, 0.0, 0.2, 1)  );
+
+  -webkit-box-shadow: var( --myuw-menu-shadow,  0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12) );
+  -moz-box-shadow:    var( --myuw-menu-shadow,  0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12) );
+  box-shadow:         var( --myuw-menu-shadow,  0 2px 4px -1px rgba(0,0,0,0.2), 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12) );
+}
+
+#list.visible {
+  transform: scale(1);
+  opacity: 1;
+  visibility: visible;
+}
+
+#list li,
+#list p {
+  padding: 0;
+  margin: 0;
+}
+
+::slotted(li) {
+  transition: var( --myuw-menu-item-transition, all .3s ease );
+  position: relative;
+  font-size: var( --myuw-menu-item-font-size, 15px );
+  font-family: var( --myuw-profile-font, var(--myuw-font, 'Montserrat', 'Roboto', Arial, sans-serif) );
+  padding: var( --myuw-menu-item-padding, 3px 16px );
+  color: var(--myuw-menu-color, rgba(0,0,0,0.87));
+  text-decoration: none;
+  background-color: var(--myuw-menu-item-bg-color, #f5f5f5 );
+  border-bottom: var(--myuw-menu-item-divider, 1px solid #e5e5e5 );
+  user-select: none;
+  outline: none;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  min-height: var( --myuw-menu-item-height, 48px );
+  height: var( --myuw-menu-item-height, 48px );
+  -webkit-align-content: center;
+  align-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+}
+
+/* 
+  Styles need to be duplicated separate from ::slotted in order for 
+  Firefox to do it's job
+*/
+#list li {
+  transition: var( --myuw-menu-item-transition, all .3s ease );
+  position: relative;
+  font-size: var( --myuw-menu-item-font-size, 15px );
+  font-family: var( --myuw-profile-font, var(--myuw-font, 'Montserrat', 'Roboto', Arial, sans-serif) );
+  padding: var( --myuw-notification-padding, 12px 0 8px 16px );
+  color: var(--myuw-menu-color, rgba(0,0,0,0.87));
+  text-decoration: none;
+  background-color: var(--myuw-menu-item-bg-color, #f5f5f5 );
+  border-bottom: var(--myuw-menu-item-divider, 1px solid #e5e5e5 );
+  user-select: none;
+  outline: none;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  min-height: var( --myuw-menu-item-min-height, 48px );
+  height: var( --myuw-menu-item-height, auto );
+  -webkit-align-content: center;
+  align-content: center;
+  -webkit-align-items: center;
+  align-items: center;
+  justify-content: space-between;
+}
+
+::slotted(li:hover),
+::slotted(li:focus)  {
+  background-color: var( --myuw-menu-item-hover-bg, #ececec );
+}
+
+#list li:hover,
+#list li:focus {
+  background-color: var( --myuw-menu-item-hover-bg, #ececec );
+}
+
+#list #see-all {
+  display: flex;
+  font-size: 16px;
+  -webkit-box-pack: end;
+  -webkit-justify-content: flex-end;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  align-items: center;
+  background-color: rgb(255,255,255);
+  border-bottom: none;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  min-height: var( --myuw-menu-item-min-height, 48px );
+  height: var( --myuw-menu-item-height, auto );
+  color: #222;
+  padding: 0 16px;
+}
+
+#list #see-all h1 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 400;
+}
+
+#list #see-all.hidden {
+  display: none;
+}
+
+#list #see-all:hover {
+  background-color: rgb(255,255,255);
+}
+
+#list .content {
+  width: var( --myuw-notification-content-width, 80% );
+  max-width: var( --myuw-notification-content-width, 80% );
+  -webkit-flex-direction: var( --myuw-notification-content-flex-direction, column );
+  flex-direction: var( --myuw-notification-content-flex-direction, column );
+}
+
+#list .content .source {
+  color: var( --myuw-link-color, #0479a8 );
+  font-weight: var( --myuw-notification-source-weight, 500 );
+  font-size: var( --myuw-notification-source-font-size, 12px );
+  display: block;
+  margin-bottom: 6px;
+}
+
+#list .content .body {
+  font-size: var( --myuw-notification-body-font-size, 15px );
+  margin-bottom: 6px;
+}
+
+#list .content .actions a {
+  /* general material button css */
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 3px;
+  border: 0;
+  padding: 0 6px;
+  margin: 6px 8px;
+  background: transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  color: var( --myuw-accent-button-color, #fafafa );
+  background-color: var( --myuw-accent-button-bg, #0479a8 );
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+  -webkit-transition: box-shadow .4s cubic-bezier(.25,.8,.25,1),background-color .4s cubic-bezier(.25,.8,.25,1);
+  transition: box-shadow .4s cubic-bezier(.25,.8,.25,1),background-color .4s cubic-bezier(.25,.8,.25,1);
+  text-decoration: none;
+  /* notifications-specific css */
+  line-height: 28px;
+  min-width: 60px;
+  min-height: 28px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-left: 0;
+}
+
+#list .content .actions a:hover {
+  background-color: var( --myuw-accent-button-hover-bg, rgb(3,78,108) );
+}
+
+#list .content .actions a.flat {
+  box-shadow: none;
+  background-color: transparent;
+  color: #222;
+}
+
+#list .content .actions a.flat:hover {
+  background-color: #0000001c;
+}
+
+#list li .dismiss {
+  display: flex;
+  justify-content: var( --myuw-icon-button-justify, center );
+  align-content: var( --myuw-icon-button-align-content, center );
+  align-items: var( --myuw-icon-button-align-items, center );
+  position: relative;
+  cursor: pointer;
+  min-height: var( --myuw-icon-button-height, 42px );
+  min-width: var( --myuw-icon-button-width, 42px );
+  height: var( --myuw-icon-button-height, 42px );
+  width: var( --myuw-icon-button-width, 42px );
+  max-width: var( --myuw-notification-dismiss-width, 20% );
+  user-select: none;
+  outline: none;
+  padding: var( --myuw-icon-button-padding, 0 );
+  margin: var( --myuw-icon-button-padding, 0 6px );
+  border: var( --myuw-icon-button-border, 0 );
+  background-color: var( --myuw-icon-button-bg, transparent );
+}
+
+#list li .dismiss svg {
+  fill: var( --myuw-notification-dismiss-color, rgba(0,0,0,0.54) );
+  -webkit-transition: color .3s cubic-bezier(.35,0,.25,1);
+  transition: color .3s cubic-bezier(.35,0,.25,1);
+}
+
+#list li .dismiss svg:hover {
+  fill: var( --myuw-notification-dismiss-hover-color, #333 );
+}
+
+#list #empty-state {
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  min-height: 140px;
+  color: #696969;
+}
+
+#list #empty-state.hidden {
+  display: none;
+}
+
+@media all and (min-width: 841px) {
+  #list {
+    width: 525px;
+  }
+}
+</style>
+
+<div id="wrapper">
+    <button id="bell-button"
+        aria-label="notifications list" 
+        aria-haspopup="true"
+        aria-controls="list"
+        aria-expanded="false">
+        <!-- bell svg -->
+        <svg id="bell-icon" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/></svg>
+        <span id="count" class="hidden"></span>
+    </button>
+
+    <ul id="list"
+        role="menu"
+        tabindex="-1"
+        aria-labelledby="bell-button">
+        <div id="see-all">
+          <h1>Notifications</h1>
+        </div>
+        <!-- menu items for each notification -->
+        <!-- empty state -->
+        <li id="empty-state">
+          <slot name="myuw-notifications-empty"></slot>
+        </li>
+    </ul>
+</div>
