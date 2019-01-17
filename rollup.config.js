@@ -10,7 +10,7 @@ let objName = 'MyUWNotifications';
 let plugins = {
   full: [
     html({
-      include: `src/${fileName}.html`,
+      include: `src/*.html`,
       htmlMinifierOptions: {
         collapseWhitespace: true,
         collapseBooleanAttributes: true,
@@ -20,7 +20,7 @@ let plugins = {
   ],
   min: [
     html({
-      include: `src/${fileName}.html`,
+      include: `src/*.html`,
       htmlMinifierOptions: {
         collapseWhitespace: true,
         collapseBooleanAttributes: true,
@@ -38,7 +38,7 @@ let plugins = {
 
 export default [
   {
-    input: `src/${fileName}.js`,
+    input: `src/index.js`,
     plugins: plugins.full.concat([babel({exclude: 'node_modules/**'})]),
     output: {
       file: `dist/${fileName}.js`,
@@ -47,7 +47,7 @@ export default [
     }
   },
   {
-    input: `src/${fileName}.js`,
+    input: `src/index.js`,
     plugins: plugins.min.concat([babel({exclude: 'node_modules/**'})]),
     output: {
       file: `dist/${fileName}.min.js`,
@@ -56,7 +56,7 @@ export default [
     }
   },
   {
-    input: `src/${fileName}.js`,
+    input: `src/index.js`,
     plugins: plugins.full,
     output: {
       file: `dist/${fileName}.mjs`,
@@ -65,7 +65,7 @@ export default [
     }
   },
   {
-    input: `src/${fileName}.js`,
+    input: `src/index.js`,
     plugins: plugins.min,
     output: {
       file: `dist/${fileName}.min.mjs`,

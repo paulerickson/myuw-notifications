@@ -1,7 +1,7 @@
 {
   "messages": [
     {
-      "id": 1,
+      "id": "1",
       "title": "This is a test notification only visible to portal administrators.",
       "titleShort": "Test admin notification",
       "description": "This notification most fields of the message data model populated, even though many are unused. This is so there's something in place when we start experimenting with new usages. It is set to expire in one year.",
@@ -27,7 +27,7 @@
       "confirmButton": null
     },
     {
-      "id": 2,
+      "id": "2",
       "title": "Your Social Security Number (SSN) in the Student Information System is invalid or missing. Please update your SSN in the Personal Information section in the Student Center.",
       "titleShort": null,
       "description": null,
