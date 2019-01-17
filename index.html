@@ -19,6 +19,41 @@
               color: #222;
               box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
             }
+            #alert {
+              opacity: 0;
+              height: 0;
+              transition: all 0.2s ease-in-out;
+              background: rgba(94, 222, 94, 0.7);
+              color: rgb(19, 75, 12);
+              border: 1px solid;
+              padding-left: 16px;
+              width: 586px;
+              display: flex;
+              align-items: center;
+            }
+            #alert.success {
+              background: rgba(94, 222, 94, 0.7);
+              color: rgb(19, 75, 12);
+              border-color: rgb(19, 75, 12);
+              height: 40px;
+              opacity: 1;
+            }
+            #alert.failure {
+              background: rgba(252, 191, 66, 0.7);
+              color: rgb(75, 54, 12);
+              border-color: rgb(75, 54, 12);
+              height: 40px;
+              opacity: 1;
+            }
+            .demo-content form div {
+              width: 600px;
+              display: flex;
+              justify-content: space-between;
+            }
+            .demo-content form input {
+              width: 400px;
+              margin-bottom: 6px;
+            }
         </style>
 
         <script src="https://unpkg.com/css-vars-ponyfill@1"></script>
@@ -54,13 +89,74 @@
 
         <!-- Demo content -->
         <div class="demo-content">
-          <button onclick="getNotifications()">Look up test notifications</button>
+          <h2>Look up text notifications</h2>
+          <button onclick="getNotifications()">Get notifications</button>
+
+          <h2>Create a new notification</h2>
+          <div id="alert" class=""></div>
+
+          <form id="newNotification" onsubmit="event.preventDefault();addNotification()">
+            <h4>Required fields</h4>
+
+            <div>
+              <label for="id">Unique ID:</label>
+              <input name="id" type="text" required/>
+            </div>
+            
+
+            <div>
+              <label for="title">Notification text:</label>
+              <input name="title" type="text" required/>
+            </div>
+            
+
+            <div>
+              <label for="actionUrl"> Action button URL:</label>
+              <input name="actionUrl" type="text" required/>
+            </div>
+
+            <div>
+              <label for="actionLabel">Action button text:</label>
+              <input name="actionLabel" type="text" required/>
+            </div>
+
+            <h4>Optional buttons</h4>
+
+            <div>
+              <label for="infoUrl">More info URL:</label>
+              <input name="infoUrl" type="text"/>
+            </div>
+
+            <div>
+              <label for="infoLabel">More info button text:</label>
+              <input name="infoLabel" type="text"/>
+            </div>
+
+            <div>
+              <label for="confirmUrl">Confirm button URL</label>
+              <input name="confirmUrl" type="text"/>
+            </div>
+
+            <div>
+              <label for="confirmLabel">Confirm button text:</label>
+              <input name="confirmLabel" type="text"/>
+            </div>
+            <br><br>
+            <button type="submit">Add notification</button>
+
+          </form>
         </div>
 
         <!-- Functions for demo content -->
         <script>
+          var form = document.forms[0];
+          var localIds = [];
+          var alert = document.getElementById('alert');
+
           /* get test notifications */
           function getNotifications() {
+            localIds.push('1');
+            localIds.push('2');
             fetch('./test/messages.json')
               .then(res => {
                 // Check if the request was valid
@@ -80,7 +176,7 @@
                     document.dispatchEvent(customEvent);
                   })
                 } else {
-                  var customEvent = new CustomEvent('myuw-has-messages', {
+                  var customEvent = new CustomEvent('myuw-has-notifications', {
                     bubbles: true,
                     detail: {
                       notifications: null
@@ -90,7 +186,7 @@
                 }
             })
             .catch( e => {
-              var customEvent = new CustomEvent('myuw-has-messages', {
+              var customEvent = new CustomEvent('myuw-has-notifications', {
                 bubbles: true,
                 detail: {
                   notifications: null
@@ -100,10 +196,77 @@
             } );
           }
 
+          function addNotification() {
+            var form = document.forms[0];
+            var newNotification = {
+              "id": "",
+              "title": "",
+              "actionButton": {
+                "label": "",
+                "url": ""
+              },
+              "moreInfoButton": null,
+              "confirmButton": null
+            };
+
+            if (localIds.indexOf(form.id.value) !== -1) {
+              // Alert duplicate and abort
+              alertResult('failure', 'A notification with the ID: "' + form.id.value + '" already exists');
+              return;
+            }
+
+            localIds.push(form.id.value);
+            newNotification.id = form.id.value;
+            newNotification.title = form.title.value;
+            newNotification.actionButton.label = form.actionLabel.value;
+            newNotification.actionButton.url = form.actionUrl.value;
+
+            if (form.infoLabel.value && form.infoUrl.value) {
+              newNotification.moreInfoButton = {
+                "label": form.infoLabel.value,
+                "url": form.infoUrl.value
+              };
+            }
+
+            if (form.confirmLabel.value && form.confirmUrl.value) {
+              newNotification.confirmButton = {
+                "label": form.confirmLabel.value,
+                "url": form.confirmUrl.value
+              };
+            }
+
+            // Dispatch event with new notification
+            // Set user data to the component
+            var customEvent = new CustomEvent('myuw-has-notifications', {
+              bubbles: true,
+                detail: {
+                  notifications: [newNotification]
+                }
+              });
+            document.dispatchEvent(customEvent);
+
+            alertResult('success', 'Added a new notification with the ID: "' + newNotification.id + '"');
+
+            form.reset();
+          }
+
+          function alertResult(css, message) {
+            alert.innerText = message;
+            alert.classList.add(css);
+
+            setTimeout(function() { 
+              alert.innerText = "";
+              alert.classList.remove(css);
+             }, 3000);
+          }
+
           document.addEventListener('myuw-notification-dismissed', (event) => {
-            // Process data passed with event
-            console.log('dismissed notification with id: ' + event.detail.notificationId);
-          }, false);
+          // Process data passed with event
+          if (event.detail.notificationId) {
+            // Remove notification
+            localIds.splice(localIds.indexOf(event.detail.notificationId), 1);
+          }
+        }, false);
         </script>
     </body>
 </html>

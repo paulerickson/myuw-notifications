@@ -22,21 +22,54 @@ Use the component's HTML tag wherever you want:
 </myuw-notifications>
 ```
 
-### Display notifications
+### Displaying notifications
 
-The component listens for a custom event to tell it when there are notifications ready to display. Dispatch a custom event named `myuw-has-notifications` that includes JSON data, like so:
+The component listens for the "`myuw-has-notifications`" custom event to tell it when there are notifications ready to display. You can use this event after fetching all notifications from a URL or to add a single notification to the list. Dispatch the event like so:
 
 ```js
 var event = new CustomEvent('myuw-has-notifications', {
+  bubbles: true,
   detail: {
-    detail: {
-      notifications: yourNotificationsJson
-    }
+    notifications: [yourNotificationsArray]
+  }
   });
 document.dispatchEvent(event);
 ```
 
-*Note: The component expects a data model similar to the one currently used in MyUW. Efforts to make this more generic or to allow adopters to establish their own data models are in progress.*
+*Note: The component includes a CustomEvent polyfill for browsers that don't already support them*
+
+#### Minimum required properties
+
+A single "notification" object must contain the following properties:
+
+```js
+{
+  "id": "",
+  "title:" "",
+  "actionButton": {
+    "label": "",
+    "url": ""
+  }
+}
+```
+
+*Notes:*
+- *The object corresponding to the `notifications` property **MUST** be an array, even if you're only displaying a single notification*
+- *The component expects a data model similar to the one currently used in MyUW. Efforts to make this more generic or to allow adopters to establish their own data models are in progress.*
+
+### Dismissing notifications
+
+Users are able to remove notifications from the list by clicking a notification's "X" dismiss button. Removal from the DOM and from the component's list is handled automatically, but if you need to hook into the event for your own purposes (e.g. to trigger an analytics event), you can listen for the `myuw-notification-dismissed` event, like so:
+
+```js
+document.addEventListener('myuw-notification-dismissed', (event) => {
+  // The event passes a detail object with a single 
+  // property: "notificationId", which is the "id" value of 
+  // the dismissed notification
+  var dismissedNotificationId = event.detail.notificationId;
+  // Do what you want with this information!
+}, false);
+```
 
 ### Configurable attributes
 
@@ -48,4 +81,4 @@ document.dispatchEvent(event);
 
 ### CSS Variables
 
-WIP
+Check out the [source HTML files](src/myuw-notifications.html) to see all the CSS variables you can override. 
