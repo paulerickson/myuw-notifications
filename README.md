@@ -16,6 +16,7 @@ Use the component's HTML tag wherever you want:
 ```HTML
 <myuw-notifications
     slot="myuw-notifications"
+    limit="3"
     see-all-url="/">
     <span slot="myuw-notifications-empty">All caught up!</span>
 >
@@ -74,6 +75,7 @@ document.addEventListener('myuw-notification-dismissed', (event) => {
 ### Configurable attributes
 
 - **see-all-url**: If this optional attribute is provided, the component will display a "See all" link in the title row of the notifications list.
+- **limit**: Limits the number of notifications displayed. If unset, notifications that exceed the height limit of the menu can be seen via scrolling.
 
 ### Slots
 
