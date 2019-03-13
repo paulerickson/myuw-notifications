@@ -54,6 +54,64 @@
         "url": "www.google.com"
       },
       "confirmButton": null
+    },
+    {
+      "id": "3",
+      "title": "Your Social Security Number (SSN) in the Student Information System is invalid or missing. Please update your SSN in the Personal Information section in the Student Center.",
+      "titleShort": null,
+      "description": null,
+      "descriptionShort": null,
+      "messageType": "notification",
+      "goLiveDate": null,
+      "expireDate": null,
+      "featureImageUrl": null,
+      "priority": null,
+      "audienceFilter": {
+        "groups": ["Users - Student SSN Update"]
+      },
+      "data":{
+        "dataUrl": null,
+        "dataObject": null,
+        "dataArrayFilter": null
+      },
+      "actionButton": {
+        "label": "Update",
+        "url": "/portal/p/my-info-student-center-ssn.ctf1/max/action.uP?pP_action=loginAction"
+      },
+      "moreInfoButton": {
+        "label": "More info",
+        "url": "www.google.com"
+      },
+      "confirmButton": null
+    },
+    {
+      "id": "4",
+      "title": "Your Social Security Number (SSN) in the Student Information System is invalid or missing. Please update your SSN in the Personal Information section in the Student Center.",
+      "titleShort": null,
+      "description": null,
+      "descriptionShort": null,
+      "messageType": "notification",
+      "goLiveDate": null,
+      "expireDate": null,
+      "featureImageUrl": null,
+      "priority": null,
+      "audienceFilter": {
+        "groups": ["Users - Student SSN Update"]
+      },
+      "data":{
+        "dataUrl": null,
+        "dataObject": null,
+        "dataArrayFilter": null
+      },
+      "actionButton": {
+        "label": "Update",
+        "url": "/portal/p/my-info-student-center-ssn.ctf1/max/action.uP?pP_action=loginAction"
+      },
+      "moreInfoButton": {
+        "label": "More info",
+        "url": "www.google.com"
+      },
+      "confirmButton": null
     }
   ] 
 }
