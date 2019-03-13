@@ -27,6 +27,7 @@ export class MyUWNotifications extends HTMLElement {
     connectedCallback() {
         // Get all attributes
         this['see-all-url']       = this.getAttribute('see-all-url');
+        this['limit']             = this.getAttribute('limit') || 999;
 
         // Element variables
         this.$list                = this.shadowRoot.getElementById('list');
@@ -147,6 +148,8 @@ export class MyUWNotifications extends HTMLElement {
         var actionButton;
         var infoButton;
         var dismissButton;
+        var limitIncrement = 0;
+        var limit = this['limit']; 
 
         // Console log wrapper so debug message is safely posted 
         // if the browser doesn't have a console
@@ -154,8 +157,7 @@ export class MyUWNotifications extends HTMLElement {
 
         // create html structure for each notification
         for (var i in notifications) {
-
-          // Abort if id not present
+          // Abort if id not present or if we have reached the display limit
           if (!notifications[i].id) { return; }
 
           // If new unique id, add to internal list and DOM, or log a message and return
@@ -165,7 +167,7 @@ export class MyUWNotifications extends HTMLElement {
             // QUESTION: Is there a use case for instead broadcasting an event so the client 
             // can respond to it (e.g. if new notifications are being added via GUI by a non-
             // expert)?
-            log.apply(console, ["Received duplicate notification id"]);
+            log.apply(console, ['Received duplicate notification id']);
             return; 
           }
 
@@ -199,7 +201,10 @@ export class MyUWNotifications extends HTMLElement {
             notificationItem.setAttribute('confirm-button-label', notifications[i].confirmButton.label);
           }
           
-          this.$list.appendChild(notificationItem);
+          if (limitIncrement < limit) { 
+            this.$list.appendChild(notificationItem);
+            limitIncrement += 1;
+          }
         }
 
         // Update to non-empty

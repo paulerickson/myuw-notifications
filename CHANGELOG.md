@@ -1,5 +1,11 @@
 # myuw-notifications versions
 
+## 1.2.0
+
+### Added
+- Optional attribute to set a limit on the number of notifications displayed in the list
+- Enable scrolling if many notifications
+
 ## 1.1.0
 
 ### Added

@@ -82,6 +82,7 @@
             color="white">
           <myuw-notifications
               see-all-url="/"
+              limit=""
               slot="myuw-notifications">
               <span slot="myuw-notifications-empty">All caught up!</span>
           </myuw-notifications>
@@ -157,6 +158,8 @@
           function getNotifications() {
             localIds.push('1');
             localIds.push('2');
+            localIds.push('3');
+            localIds.push('4');
             fetch('./test/messages.json')
               .then(res => {
                 // Check if the request was valid
