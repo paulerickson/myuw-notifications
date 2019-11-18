@@ -1,275 +1,266 @@
-<html>
-    <head>
-        <style>
-            body {
-                padding: 0;
-                margin: 0;
-                background: #ccc;
-                font-family: Arial, Helvetica, sans-serif;
-            }
-            .demo-content {
-              padding: 24px;
-            }
-            .demo-content button {
-              font-size: 18px;
-              padding: 8px 16px;
-              border-radius: 3px;
-              height: 48px;
-              background: #fafafa;
-              color: #222;
-              box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
-            }
-            #alert {
-              opacity: 0;
-              height: 0;
-              transition: all 0.2s ease-in-out;
-              background: rgba(94, 222, 94, 0.7);
-              color: rgb(19, 75, 12);
-              border: 1px solid;
-              padding-left: 16px;
-              width: 586px;
-              display: flex;
-              align-items: center;
-            }
-            #alert.success {
-              background: rgba(94, 222, 94, 0.7);
-              color: rgb(19, 75, 12);
-              border-color: rgb(19, 75, 12);
-              height: 40px;
-              opacity: 1;
-            }
-            #alert.failure {
-              background: rgba(252, 191, 66, 0.7);
-              color: rgb(75, 54, 12);
-              border-color: rgb(75, 54, 12);
-              height: 40px;
-              opacity: 1;
-            }
-            .demo-content form div {
-              width: 600px;
-              display: flex;
-              justify-content: space-between;
-            }
-            .demo-content form input {
-              width: 400px;
-              margin-bottom: 6px;
-            }
-        </style>
+<!DOCTYPE html>
+<meta charset="utf-8">
 
-        <script src="https://unpkg.com/css-vars-ponyfill@1"></script>
-        <script>
-          cssVars({shadowDOM: true,watch: true});
-        </script>
-        <!-- Web component polyfill loader -->
-        <script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-loader.js"></script>
+<style>
+  body {
+    padding: 0;
+    margin: 0;
+    background: #ccc;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+  .demo-content {
+    padding: 24px;
+  }
+  .demo-content button {
+    font-size: 18px;
+    padding: 8px 16px;
+    border-radius: 3px;
+    height: 48px;
+    background: #fafafa;
+    color: #222;
+    box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+  }
+  #alert {
+    opacity: 0;
+    height: 0;
+    transition: all 0.2s ease-in-out;
+    background: rgba(94, 222, 94, 0.7);
+    color: rgb(19, 75, 12);
+    border: 1px solid;
+    padding-left: 16px;
+    width: 586px;
+    display: flex;
+    align-items: center;
+  }
+  #alert.success {
+    background: rgba(94, 222, 94, 0.7);
+    color: rgb(19, 75, 12);
+    border-color: rgb(19, 75, 12);
+    height: 40px;
+    opacity: 1;
+  }
+  #alert.failure {
+    background: rgba(252, 191, 66, 0.7);
+    color: rgb(75, 54, 12);
+    border-color: rgb(75, 54, 12);
+    height: 40px;
+    opacity: 1;
+  }
+  .demo-content form div {
+    width: 600px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .demo-content form input {
+    width: 400px;
+    margin-bottom: 6px;
+  }
+</style>
 
-        <script type="module" src="https://unpkg.com/@myuw-web-components/myuw-app-styles@^1?module"></script>
-        <script nomodule src="https://unpkg.com/@myuw-web-components/myuw-app-styles@^1"></script>
+<!-- Web component polyfill loader -->
+<script src="https://unpkg.com/@webcomponents/webcomponentsjs@2.1.3/webcomponents-bundle.js"></script>
 
-        <script type="module" src="https://unpkg.com/@myuw-web-components/myuw-app-bar@^1?module"></script>
-        <script nomodule src="https://unpkg.com/@myuw-web-components/myuw-app-bar@^1"></script>
+<script type="module">
+  import "https://unpkg.com/css-vars-ponyfill@1";
+  import "https://cdn.my.wisc.edu/@myuw-web-components/myuw-app-bar@latest/myuw-app-bar.min.mjs";
+  import "https://cdn.my.wisc.edu/@myuw-web-components/myuw-app-styles@latest/myuw-app-styles.min.mjs";
 
-        <script type="module" src="./dist/myuw-notifications.mjs"></script>
-        <script nomodule src="./dist/myuw-notifications.mjs"></script>
-    </head>
-    <body>
-        <!-- App bar with bell button -->
-        <myuw-app-bar
-            theme-name="MyUW"
-            app-name="Notifications Demo"
-            app-url=""
-            background="rgb(197, 5, 12)"
-            color="white">
-          <myuw-notifications
-              see-all-url="/"
-              limit=""
-              slot="myuw-notifications">
-              <span slot="myuw-notifications-empty">All caught up!</span>
-          </myuw-notifications>
-        </myuw-app-bar>
+  import "./dist/myuw-notifications.mjs";
 
-        <!-- Demo content -->
-        <div class="demo-content">
-          <h2>Look up text notifications</h2>
-          <button onclick="getNotifications()">Get notifications</button>
+  cssVars({shadowDOM: true,watch: true});
+  var form = document.forms[0];
+  var localIds = [];
+  var alert = document.getElementById('alert');
 
-          <h2>Create a new notification</h2>
-          <div id="alert" class=""></div>
+  /* get test notifications */
+  function getNotifications() {
+    localIds.push('1');
+    localIds.push('2');
+    localIds.push('3');
+    localIds.push('4');
+    fetch('./test/messages.json')
+      .then(res => {
+        // Check if the request was valid
+        if(res.status === 200){
+          res.json()
+          .then( data => {
+            // If data.person is not set, return.
+            if(!data.messages) { return; }
 
-          <form id="newNotification" onsubmit="event.preventDefault();addNotification()">
-            <h4>Required fields</h4>
-
-            <div>
-              <label for="id">Unique ID:</label>
-              <input name="id" type="text" required/>
-            </div>
-            
-
-            <div>
-              <label for="title">Notification text:</label>
-              <input name="title" type="text" required/>
-            </div>
-            
-
-            <div>
-              <label for="actionUrl"> Action button URL:</label>
-              <input name="actionUrl" type="text" required/>
-            </div>
-
-            <div>
-              <label for="actionLabel">Action button text:</label>
-              <input name="actionLabel" type="text" required/>
-            </div>
-
-            <h4>Optional buttons</h4>
-
-            <div>
-              <label for="infoUrl">More info URL:</label>
-              <input name="infoUrl" type="text"/>
-            </div>
-
-            <div>
-              <label for="infoLabel">More info button text:</label>
-              <input name="infoLabel" type="text"/>
-            </div>
-
-            <div>
-              <label for="confirmUrl">Confirm button URL</label>
-              <input name="confirmUrl" type="text"/>
-            </div>
-
-            <div>
-              <label for="confirmLabel">Confirm button text:</label>
-              <input name="confirmLabel" type="text"/>
-            </div>
-            <br><br>
-            <button type="submit">Add notification</button>
-
-          </form>
-        </div>
-
-        <!-- Functions for demo content -->
-        <script>
-          var form = document.forms[0];
-          var localIds = [];
-          var alert = document.getElementById('alert');
-
-          /* get test notifications */
-          function getNotifications() {
-            localIds.push('1');
-            localIds.push('2');
-            localIds.push('3');
-            localIds.push('4');
-            fetch('./test/messages.json')
-              .then(res => {
-                // Check if the request was valid
-                if(res.status === 200){
-                  res.json()
-                  .then( data => {
-                    // If data.person is not set, return.
-                    if(!data.messages) { return; }
-
-                    // Set user data to the component
-                    var customEvent = new CustomEvent('myuw-has-notifications', {
-                      bubbles: true,
-                      detail: {
-                        notifications: data.messages
-                      }
-                    });
-                    document.dispatchEvent(customEvent);
-                  })
-                } else {
-                  var customEvent = new CustomEvent('myuw-has-notifications', {
-                    bubbles: true,
-                    detail: {
-                      notifications: null
-                    }
-                  });
-                  document.dispatchEvent(customEvent);
-                }
-            })
-            .catch( e => {
-              var customEvent = new CustomEvent('myuw-has-notifications', {
-                bubbles: true,
-                detail: {
-                  notifications: null
-                }
-              });
-              document.dispatchEvent(customEvent);
-            } );
-          }
-
-          function addNotification() {
-            var form = document.forms[0];
-            var newNotification = {
-              "id": "",
-              "title": "",
-              "actionButton": {
-                "label": "",
-                "url": ""
-              },
-              "moreInfoButton": null,
-              "confirmButton": null
-            };
-
-            if (localIds.indexOf(form.id.value) !== -1) {
-              // Alert duplicate and abort
-              alertResult('failure', 'A notification with the ID: "' + form.id.value + '" already exists');
-              return;
-            }
-
-            localIds.push(form.id.value);
-            newNotification.id = form.id.value;
-            newNotification.title = form.title.value;
-            newNotification.actionButton.label = form.actionLabel.value;
-            newNotification.actionButton.url = form.actionUrl.value;
-
-            if (form.infoLabel.value && form.infoUrl.value) {
-              newNotification.moreInfoButton = {
-                "label": form.infoLabel.value,
-                "url": form.infoUrl.value
-              };
-            }
-
-            if (form.confirmLabel.value && form.confirmUrl.value) {
-              newNotification.confirmButton = {
-                "label": form.confirmLabel.value,
-                "url": form.confirmUrl.value
-              };
-            }
-
-            // Dispatch event with new notification
             // Set user data to the component
             var customEvent = new CustomEvent('myuw-has-notifications', {
               bubbles: true,
-                detail: {
-                  notifications: [newNotification]
-                }
-              });
+              detail: {
+                notifications: data.messages
+              }
+            });
             document.dispatchEvent(customEvent);
+          })
+        } else {
+          var customEvent = new CustomEvent('myuw-has-notifications', {
+            bubbles: true,
+            detail: {
+              notifications: null
+            }
+          });
+          document.dispatchEvent(customEvent);
+        }
+    })
+    .catch( e => {
+      var customEvent = new CustomEvent('myuw-has-notifications', {
+        bubbles: true,
+        detail: {
+          notifications: null
+        }
+      });
+      document.dispatchEvent(customEvent);
+    } );
+  }
 
-            alertResult('success', 'Added a new notification with the ID: "' + newNotification.id + '"');
+  function addNotification() {
+    var form = document.forms[0];
+    var newNotification = {
+      "id": "",
+      "title": "",
+      "actionButton": {
+        "label": "",
+        "url": ""
+      },
+      "moreInfoButton": null,
+      "confirmButton": null
+    };
 
-            form.reset();
-          }
+    if (localIds.indexOf(form.id.value) !== -1) {
+      // Alert duplicate and abort
+      alertResult('failure', 'A notification with the ID: "' + form.id.value + '" already exists');
+      return;
+    }
 
-          function alertResult(css, message) {
-            alert.innerText = message;
-            alert.classList.add(css);
+    localIds.push(form.id.value);
+    newNotification.id = form.id.value;
+    newNotification.title = form.title.value;
+    newNotification.actionButton.label = form.actionLabel.value;
+    newNotification.actionButton.url = form.actionUrl.value;
 
-            setTimeout(function() { 
-              alert.innerText = "";
-              alert.classList.remove(css);
-             }, 3000);
-          }
+    if (form.infoLabel.value && form.infoUrl.value) {
+      newNotification.moreInfoButton = {
+        "label": form.infoLabel.value,
+        "url": form.infoUrl.value
+      };
+    }
 
-          document.addEventListener('myuw-notification-dismissed', (event) => {
-          // Process data passed with event
-          if (event.detail.notificationId) {
-            // Remove notification
-            localIds.splice(localIds.indexOf(event.detail.notificationId), 1);
-          }
-        }, false);
-        </script>
-    </body>
-</html>
+    if (form.confirmLabel.value && form.confirmUrl.value) {
+      newNotification.confirmButton = {
+        "label": form.confirmLabel.value,
+        "url": form.confirmUrl.value
+      };
+    }
+
+    // Dispatch event with new notification
+    // Set user data to the component
+    var customEvent = new CustomEvent('myuw-has-notifications', {
+      bubbles: true,
+        detail: {
+          notifications: [newNotification]
+        }
+      });
+    document.dispatchEvent(customEvent);
+
+    alertResult('success', 'Added a new notification with the ID: "' + newNotification.id + '"');
+
+    form.reset();
+  }
+
+  function alertResult(css, message) {
+    alert.innerText = message;
+    alert.classList.add(css);
+
+    setTimeout(function() {
+      alert.innerText = "";
+      alert.classList.remove(css);
+     }, 3000);
+  }
+
+  document.addEventListener('myuw-notification-dismissed', (event) => {
+    // Process data passed with event
+    if (event.detail.notificationId) {
+      // Remove notification
+      localIds.splice(localIds.indexOf(event.detail.notificationId), 1);
+    }
+  }, false);
+</script>
+
+<!-- App bar with bell button -->
+<myuw-app-bar
+  theme-name="MyUW"
+  app-name="Notifications Demo"
+  app-url=""
+  background="rgb(197, 5, 12)"
+  color="white"
+>
+  <myuw-notifications
+    see-all-url="/"
+    limit=""
+    slot="myuw-notifications"
+  >
+    <span slot="myuw-notifications-empty">All caught up!</span>
+  </myuw-notifications>
+</myuw-app-bar>
+
+<!-- Demo content -->
+<div class="demo-content">
+  <h2>Look up text notifications</h2>
+  <button onclick="getNotifications()">Get notifications</button>
+
+  <h2>Create a new notification</h2>
+  <div id="alert" class=""></div>
+
+  <form id="newNotification" onsubmit="event.preventDefault();addNotification()">
+    <h4>Required fields</h4>
+
+    <div>
+      <label for="id">Unique ID:</label>
+      <input name="id" type="text" required/>
+    </div>
+
+    <div>
+      <label for="title">Notification text:</label>
+      <input name="title" type="text" required/>
+    </div>
+
+    <div>
+      <label for="actionUrl"> Action button URL:</label>
+      <input name="actionUrl" type="text" required/>
+    </div>
+
+    <div>
+      <label for="actionLabel">Action button text:</label>
+      <input name="actionLabel" type="text" required/>
+    </div>
+
+    <h4>Optional buttons</h4>
+
+    <div>
+      <label for="infoUrl">More info URL:</label>
+      <input name="infoUrl" type="text"/>
+    </div>
+
+    <div>
+      <label for="infoLabel">More info button text:</label>
+      <input name="infoLabel" type="text"/>
+    </div>
+
+    <div>
+      <label for="confirmUrl">Confirm button URL</label>
+      <input name="confirmUrl" type="text"/>
+    </div>
+
+    <div>
+      <label for="confirmLabel">Confirm button text:</label>
+      <input name="confirmLabel" type="text"/>
+    </div>
+    <br><br>
+    <button type="submit">Add notification</button>
+
+  </form>
+</div>

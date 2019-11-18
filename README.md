@@ -2,39 +2,37 @@
 
 ## Getting started
 
-Add the following import to your page's `<head>`:
+Import the component as follows:
 
 ```html
-<script type="module" src="https://unpkg.com/@myuw-web-components/myuw-notifications@^1?module"></script>
-<script nomodule src="https://unpkg.com/@myuw-web-components/myuw-notifications@^1"></script>
-```
+<!-- import the module -->
+<script type="module" src="https://cdn.my.wisc.edu/@myuw-web-components/myuw-notifications@latest/myuw-notifications.min.mjs"></script>
 
-*Note: You may want to specify a specific version of the component to ensure stability. See [the change log](CHANGELOG.md) or the [npm entry](https://www.npmjs.com/package/@myuw-web-components/myuw-notifications) for version information.*
+<!-- fallback for browsers without ES2015 module support -->
+<script nomodule src="https://cdn.my.wisc.edu/@myuw-web-components/myuw-notifications@latest/myuw-notifications.min.js"></script>
 
-Use the component's HTML tag wherever you want:
-
-```HTML
 <myuw-notifications
-    slot="myuw-notifications"
-    limit="3"
-    see-all-url="/">
-    <span slot="myuw-notifications-empty">All caught up!</span>
+  slot="myuw-notifications"
+  limit="3"
+  see-all-url="/"
 >
+  <span slot="myuw-notifications-empty">All caught up!</span>
 </myuw-notifications>
 ```
+
+_Note:_ The evergreen "latest" version can be used for convenience, but in production settings it is recommended to use the latest [release version](https://github.com/myuw-web-components/myuw-notifications/releases) specifically, and upgrade only after testing!
 
 ### Displaying notifications
 
 The component listens for the "`myuw-has-notifications`" custom event to tell it when there are notifications ready to display. You can use this event after fetching all notifications from a URL or to add a single notification to the list. Dispatch the event like so:
 
 ```js
-var event = new CustomEvent('myuw-has-notifications', {
+document.dispatchEvent(new CustomEvent('myuw-has-notifications', {
   bubbles: true,
   detail: {
     notifications: [yourNotificationsArray]
   }
-  });
-document.dispatchEvent(event);
+});
 ```
 
 *Note: The component includes a CustomEvent polyfill for browsers that don't already support them*
@@ -64,8 +62,8 @@ Users are able to remove notifications from the list by clicking a notification'
 
 ```js
 document.addEventListener('myuw-notification-dismissed', (event) => {
-  // The event passes a detail object with a single 
-  // property: "notificationId", which is the "id" value of 
+  // The event passes a detail object with a single
+  // property: "notificationId", which is the "id" value of
   // the dismissed notification
   var dismissedNotificationId = event.detail.notificationId;
   // Do what you want with this information!
@@ -79,8 +77,8 @@ document.addEventListener('myuw-notification-dismissed', (event) => {
 
 ### Slots
 
-- **myuw-notifications-empty**: Use this slot to insert markup you would like your users to see when there are no new notifications to view. 
+- **myuw-notifications-empty**: Use this slot to insert markup you would like your users to see when there are no new notifications to view.
 
 ### CSS Variables
 
-Check out the [source HTML files](src/myuw-notifications.html) to see all the CSS variables you can override. 
+Check out the [source HTML files](src/myuw-notifications.html) to see all the CSS variables you can override.

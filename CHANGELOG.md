@@ -5,6 +5,8 @@
 ### Added
 - Optional attribute to set a limit on the number of notifications displayed in the list
 - Enable scrolling if many notifications
+- Delivery pipeline
+- Contributing guidelines
 
 ## 1.1.0
 
